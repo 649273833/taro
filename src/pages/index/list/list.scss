@@ -1,0 +1,180 @@
+@import "../../../app.scss";
+@import "../../../wxParse/wxParse.wxss";
+.list{
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 134px 16px 0;
+  height: calc(100vh - 264px);
+  background-color: rgba(225,225,225,.3);
+}
+.myBtn {
+  width: 0.55rem;
+  height: 0.37rem;
+}
+.todolist{
+  position: relative!important;
+  view{
+    overflow: hidden!important;
+  }
+  .box{
+    position: relative;
+    overflow: hidden!important;
+    .item{
+      overflow: hidden;
+      position: relative;
+      margin: 10px 0;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: $defaultPadding $defaultPadding/2;
+      border-bottom: 1px solid $lightGray;
+      display: flex;
+      align-items: center;
+      .l{
+        margin-right: 20px;
+        .zoomimg{
+          width: 120px;
+          height: 120px;
+        }
+      }
+      .r{
+        width: 70%;
+        .title{
+          font-size: 32px;
+          color: $mainColor;
+          margin-bottom: 20px;
+          font-weight: 500;
+        }
+        .info-panel{
+          display: flex;
+          align-items: center;
+          font-size: 28px;
+          color: $lightBlack;
+          .type{
+            max-width: 30%;
+          }
+        }
+        .zan{
+          margin-left: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .zan-icon{
+            margin-left: 10px;
+            width: 40px;
+            height: 40px;
+          }
+          .text{
+            margin-left: 10px;
+          }
+        }
+        .read{
+          margin-left: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .read-icon{
+            margin-left: 10px;
+            width: 40px;
+            height: 40px;
+          }
+          .text{
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+    .delete{
+      position: absolute;
+      top: 0;
+      margin: 10px;
+      border-radius: 10px;
+      padding: 44px 0;
+      right: -200px;
+      width: 180px;
+      height: 100px;
+      background-color: #E4393C;
+      color: #fff;
+      font-size: 44px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 96px;
+    }
+    .no-more{
+      margin: 30px auto;
+      color: $lightGray;
+      font-size: 32px;
+      text-align: center;
+    }
+  }
+}
+.detail{
+  padding: 194px 16px 0;
+  .detail-panel{
+    margin: 0 auto 100px;
+    .title{
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      position: relative;
+      padding: $defaultPadding/2 0;
+      .names{
+        max-width: 80%;
+      }
+      .reload{
+        position: absolute;
+        right: 10px;
+        top: $defaultPadding/2;
+      }
+    }
+    .info{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px;
+      border-bottom:2px solid #666;
+      padding-bottom:40px;
+
+    }
+    .content{
+      pre,.wxParse-pre{
+        display: block;
+        overflow: auto;
+        background: #f4f4f4;
+        padding: 5px 10px;
+        border: 1px solid #eee;
+        whitewhite-space:pre-wrap; /* css-3 */
+        whitewhite-space:-moz-pre-wrap; /* Mozilla, since 1999 */
+        whitewhite-space:-pre-wrap; /* Opera 4-6 */
+        whitewhite-space:-o-pre-wrap; /* Opera 7 */
+        word-wrap:break-word; /* Internet Explorer 5.5+ */
+        white-space: pre-wrap; /* Firefox */
+      }
+    }
+  }
+  .bottom-info{
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    background: #fff;
+    left: 0;
+    bottom: 0;
+    .readings{
+      font-weight: 600;
+      font-size: 32px;
+      text-align: left;
+    }
+    .avatars{
+      //margin-left: 10px;
+      .items{
+        float: right;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        vertical-align: text-top;
+        //margin-left: -10px;
+      }
+    }
+  }
+}

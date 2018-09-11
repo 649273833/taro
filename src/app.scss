@@ -1,0 +1,80 @@
+/*初始化标签*/
+/* 表单相关样式 */
+/*样式变量定义*/
+$mainColor:#333;
+$lightBlack:#666;
+$lightGray:#e5e5e5;
+$defaultPadding:30px;
+$green:#00ae66;
+input, textarea {
+  border: none;
+  outline: none;
+  background: none;
+}
+input:focus,textarea:focus,button:focus{
+  outline: none;
+}
+input:active, button:active{
+  border-style: none!important;
+}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,
+blockquote,th,td,header,hgroup,nav,section,article,aside,footer,figure,figcaption,menu,button {
+  margin:0;
+  padding:0;
+}
+h1,h2,h3,h4,h5,h6{font-weight: normal;}
+a,i,span{display: inline-block;}
+a {
+  text-decoration:none;
+  color: $mainColor;
+}
+ul, li, ol {
+  list-style: none;
+}
+img{
+  vertical-align: middle;
+}
+body {
+  font-family:Microsoft Yahei,sans-serif;
+  color:$mainColor;
+  font-size: 30px;
+  background-color: #f5f5f5;
+}
+//功能类
+.fr{float: right;}
+.fl{float: left;}
+.clear:after{
+  content: '';
+  display: block;
+  clear: both;
+}
+.show{display: table;}
+.hide{display: none;}
+.font-clamp {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.text-overflow{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.at-nav-bar--fixed{
+  background: #fff!important;
+  padding-top:42px!important;
+}
+.center-block {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+.img-responsive{
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.at-tab-bar--ipx.at-tab-bar--fixed{
+  padding-bottom: 0!important;
+}
