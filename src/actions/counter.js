@@ -12,4 +12,15 @@ const add = () =>{
     type:actionType.ADD
   }
 }
-export {getList,add}
+const userinfo = (data) =>{
+  return{
+    type:actionType.USERINFO,
+    userinfo:data
+  }
+}
+const isShow = () =>{
+  return{
+    type:actionType.isShow
+  }
+}
+export {getList,add,userinfo,isShow}

@@ -27,21 +27,13 @@ class Detail extends Component{
   }
   onShareAppMessage(){
     return {
-      title: this.state.list.title,
+      title: this.props.counter.list.filter((data)=>data.id === _that.$router.params.id )[0].title,
     }
   }
   componentDidMount(){
     this.props.add()//辅助重新渲染页面，不知道为啥更新redux里面的数据后，没有更新页面
     let _that = this
     this.handleGetContent()
-    _that.setState({list:_that.props.counter.list.filter((data)=>data.id === _that.$router.params.id )[0]})
-    // Taro.getStorage({
-    //   key:'list',
-    //   success:((res)=>{
-    //     // console.log(res.data.filter((data)=>data.id === _that.$router.params.id )[0])
-    //     _that.setState({list:res.data.filter((data)=>data.id === _that.$router.params.id )[0]})
-    //   })
-    // })
   }
   handleGetContent = () =>{
     Taro.showLoading({

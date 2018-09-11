@@ -19,33 +19,12 @@ export default class List extends Component{
   state = {
     start:0,
     page:10,
-    list:'',
     more:true,
-    distance:''
   }
   componentDidMount(){
     this.props.onReload(this)
     this. handelGetList()
-
   }
-  handleGetStorage = () =>{
-    let _that = this;
-    Taro.getStorage({
-      key:'list',
-      success:((res)=>{
-        _that.setState({list:res.data})
-      }),
-      fail:(()=>{
-        _that.handelGetList()
-      })
-    })
-    Taro.getStorage({
-      key:'more',
-      success:((res)=>{
-        _that.setState({more:res.data})
-      })
-    })
-  };
   handelGetList = () =>{
     Taro.showLoading({
       title:'loading'
@@ -70,14 +49,7 @@ export default class List extends Component{
       data:data
     })
       .then((res)=>{
-        console.log(res)
         if(res.statusCode === 200 && res.data.code > 0){
-          // _that.setState({list:res.data.data});
-          // Taro.setStorage({
-          //   key:'list',
-          //   data:res.data.data
-          // });
-
           res.data.data.forEach(function(item, index) {
             item.right = 0
           })
@@ -112,13 +84,7 @@ export default class List extends Component{
           start = res.data
         }
       }),
-      // fail:(()=>{
-      //   start = start + 5
-      // })
     })
-    // start = start + 5;
-
-    console.log(start);
     let data = {
       start:start,
       page:5
@@ -129,11 +95,9 @@ export default class List extends Component{
     })
       .then((res)=>{
         if(res.statusCode === 200 && res.data.code > 0){
-          // _that.setState({list:_that.state.list.concat(res.data.data)});
-          // Taro.setStorage({
-          //   key:'list',
-          //   data:_that.state.list.concat(res.data.data)
-          // });
+          res.data.data.forEach(function(item, index) {
+            item.right = 0
+          })
           _that.props.getList(res.data.data)
         }else if(res.statusCode === 200 && res.data.code < 0) {
           _that.setState({more:false});
@@ -165,12 +129,11 @@ export default class List extends Component{
     console.log('下拉');
   }
 
-
   render(){
     let scrollStyle = {
       height:'100%',
     }
-    let {more,distance} = this.state;
+    let {more} = this.state;
     return(
       <View className='list' >
         <ScrollView

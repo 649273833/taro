@@ -6,7 +6,7 @@ import './list.scss'
 import zoomimg from '../../../assets/img/1556287878.png'
 
 import { connect } from '@tarojs/redux'
-import {getList} from '../../../actions/counter';
+import {getList,add} from '../../../actions/counter';
 
 @connect(({ counter }) => ({
   counter
@@ -14,6 +14,9 @@ import {getList} from '../../../actions/counter';
   getList(list,type){
     dispatch(getList(list,type))
   },
+  add(){
+    dispatch(add())
+  }
 }))
 export default class TodoList extends Component{
   state ={
@@ -24,64 +27,9 @@ export default class TodoList extends Component{
       url:`/pages/index/detail/detail?id=${item.id}`
     })
   }
-  onTouchStart = (id,e) =>{
-    this.startX = e.touches[0].clientX;
-    console.log('start:',e.touches[0].pageX)
-  }
-  onTouchMove = (id,e) =>{
-    let _that = this;
-    this.endX = e.touches[0].clientX;
-    let right = _that.props.counter.list.find((data)=>data.id === id ).right
-    let distance = (this.startX - this.endX) + this.state.distance;
-
-    if(distance >= 200){
-      distance = 200
-      console.log(distance)
-      this.setState({distance})
-      _that.props.counter.list.find((data)=>data.id === id ).right = distance
-      _that.props.getList(_that.props.counter.list,1)
-    }else if(distance<=0){
-      distance = 0
-      this.setState({distance})
-      console.log(distance)
-      _that.props.counter.list.find((data)=>data.id === id ).right = distance
-      _that.props.getList(_that.props.counter.list,1)
-      return
-    }else {
-      this.setState({distance})
-      _that.props.counter.list.find((data)=>data.id === id ).right = distance
-      _that.props.getList(_that.props.counter.list,1)
-    }
-    // console.log(id)
-    // console.log('end:',distance)
-    // console.log('move:',e.touches[0].pageX)
-  }
-  onTouchEnd = (id,e) =>{
-    let _that = this;
-    let {distance} = this.state;
-    // console.log(id)
-    if(distance === 200){
-      // console.log(distance)
-      this.setState({distance:200})
-      _that.props.counter.list.find((data)=>data.id === id ).right = 200
-      _that.props.getList(_that.props.counter.list,1)
-    }else {
-      this.setState({distance:0})
-      // console.log('e:',distance === 200)
-      _that.props.counter.list.find((data)=>data.id === id ).right = 0
-      _that.props.getList(_that.props.counter.list,1)
-    }
-  }
-  onTouchCancel = (id,e) =>{
-    let _that = this;
-    this.setState({distance:0})
-    _that.props.counter.list.find((data)=>data.id === id ).right = 0
-    _that.props.getList(_that.props.counter.list,1)
-    console.log('cancel')
-    // console.log(id)
-  }
   handleItemMove = (id,e) =>{
     let _that = this;
+    _that.props.add()//不知道啥子bug导致不更新页面，用这个辅助更新页面
     let right = _that.props.counter.list.find((data)=>data.id === id ).right
     if(right === 0){
       _that.props.counter.list.filter((data)=>data.id === id ).right = 0
@@ -92,22 +40,19 @@ export default class TodoList extends Component{
       _that.props.getList(_that.props.counter.list,1)
     }
   }
+  handleItemDel = (id) =>{
+    console.log(id)
+  }
   render(){
     let list = this.props.counter.list;
+    let Admin = this.props.counter.userinfo[0]
     let more = this.props.more;
     return(
       <View className='todolist'>
         {
           (list || []).map((item)=>
             <View className='box' key={item.id}>
-              <View className='item'
-                    style={{right:Taro.pxTransform(item.right)}}
-
-                    // onTouchStart={this.onTouchStart.bind(this,item.id)}
-                    // onTouchMove={this.onTouchMove.bind(this,item.id)}
-                    // onTouchEnd={this.onTouchEnd.bind(this,item.id)}
-                    // onTouchCancel={this.onTouchCancel.bind(this,item.id)}
-              >
+              <View className='item' style={{right:Taro.pxTransform(item.right)}}>
                 <View className='l'>
                   <Image className='zoomimg' src={item.zoomimg ? item.zoomimg : zoomimg}/>
                 </View>
@@ -125,12 +70,17 @@ export default class TodoList extends Component{
                     </View>
                   </View>
                 </View>
-                <View onClick={this.handleItemMove.bind(this,item.id)}>
-                  <AtIcon value='settings' size='30' color='#e5e5e5'/>
-                </View>
+                {
+                  Admin && Admin.admin == 1 ?
+                    <View onClick={this.handleItemMove.bind(this,item.id)}>
+                      <AtIcon value='settings' size='30' color='#e5e5e5'/>
+                    </View>
+                    : null
+                }
               </View>
               <View
                 className='delete'
+                onClick={this.handleItemDel.bind(this,item.id)}
                 style={{
                   right:item.right > 0
                     ? Taro.pxTransform(item.right - 200)
@@ -141,7 +91,7 @@ export default class TodoList extends Component{
           )
         }
         {
-          !more ? <View className='no-more'>没有跟多了</View> : null
+          !more ? <View className='no-more'>没有更多了</View> : null
         }
 
       </View>
