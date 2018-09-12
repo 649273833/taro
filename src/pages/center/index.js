@@ -1,6 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Button } from '@tarojs/components'
-import TabBar from '../common/TabBar'
+import { View} from '@tarojs/components'
 import Cpanel from './cpanel/Cpanel'
 import './index.scss'
 export default class Center extends Component{

@@ -17,6 +17,7 @@ class App extends Component {
       'pages/index/index',
       'pages/index/detail/detail',
       'pages/center/index',
+      'pages/center/browse/browse',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -24,6 +25,7 @@ class App extends Component {
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black',
       navigationStyle: 'custom',
+      enablePullDownRefresh:true
     },
     tabBar: {
       color: "#626567",

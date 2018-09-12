@@ -99,18 +99,19 @@
       text-align: center;
       line-height: 96px;
     }
-    .no-more{
-      margin: 30px auto;
-      color: $lightGray;
-      font-size: 32px;
-      text-align: center;
-    }
+  }
+  .no-more{
+    margin: 30px auto;
+    color: $lightGray;
+    font-size: 32px;
+    text-align: center;
   }
 }
 .detail{
   padding: 194px 16px 0;
   .detail-panel{
-    margin: 0 auto 100px;
+    margin: 0 auto ;
+    padding-bottom: 200px;
     .title{
       text-align: center;
       font-size: 36px;

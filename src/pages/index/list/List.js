@@ -17,31 +17,31 @@ let start= 5;
 
 export default class List extends Component{
   state = {
-    start:0,
     page:10,
     more:true,
   }
   componentDidMount(){
     this.props.onReload(this)
-    this. handelGetList()
+    this.handelGetList()
   }
   handelGetList = () =>{
     Taro.showLoading({
       title:'loading'
     })
-    Taro.setStorage({
-      key:'more',
-      data:true
-    });
-    Taro.setStorage({
-      key:'start',
-      data:5
-    });
+    Taro.hideLoading()
+    // Taro.setStorage({
+    //   key:'more',
+    //   data:true
+    // });
+    // Taro.setStorage({
+    //   key:'start',
+    //   data:5
+    // });
     let _that = this;
     _that.setState({more:true});
-    let {start,page} = _that.state;
+    let {page} = _that.state;
     let data = {
-      start:start,
+      start:0,
       page:page
     };
     Taro.request({
@@ -54,7 +54,6 @@ export default class List extends Component{
             item.right = 0
           })
           _that.props.getList(res.data.data,1)
-          Taro.hideLoading()
         }else if(res.statusCode === 200 && res.data.code < 0) {
           _that.setState({more:false});
           Taro.showToast({
@@ -62,10 +61,10 @@ export default class List extends Component{
             image:close
           });
           Taro.hideLoading()
-          Taro.setStorage({
-            key:'more',
-            data:false
-          });
+          // Taro.setStorage({
+          //   key:'more',
+          //   data:false
+          // });
         }
       })
   };
@@ -73,18 +72,25 @@ export default class List extends Component{
     Taro.showLoading({
       title:'loading'
     })
+    Taro.hideLoading()
     let _that = this;
     let {more} = _that.state;
-    Taro.getStorage({
-      key:'start',
-      success:((res)=>{
-        if(more){
-          start = res.data + 5
-        }else {
-          start = res.data
-        }
-      }),
-    })
+    // Taro.getStorage({
+    //   key:'start',
+    //   success:((res)=>{
+    //     if(more){
+    //       start = res.data + 5
+    //     }else {
+    //       start = res.data
+    //     }
+    //   }),
+    // })
+    if(more){
+      start = start + 5
+    }else {
+      start = start
+    }
+    console.log(start)
     let data = {
       start:start,
       page:5
@@ -105,21 +111,21 @@ export default class List extends Component{
             title:'没有跟多数据了',
             image:close
           })
-          Taro.setStorage({
-            key:'more',
-            data:false
-          });
+          console.log('没了')
+          // Taro.setStorage({
+          //   key:'more',
+          //   data:false
+          // });
         }
-        Taro.hideLoading()
-        Taro.setStorage({
-          key:'start',
-          data:start
-        });
+        // Taro.setStorage({
+        //   key:'start',
+        //   data:start
+        // });
       })
   };
+
   handleScrolltoupper = () =>{
     console.log('到顶了');
-    // this.handelGetList()
   };
   handleScrolltolower = () =>{
     console.log('到底了');

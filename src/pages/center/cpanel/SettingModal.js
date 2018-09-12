@@ -92,7 +92,7 @@ export default class SettingModal extends Component{
     this.setState({[type]:e.target.value})
   }
   render(){
-    let userinfo = this.props.counter.userinfo
+    let userinfo = this.props.counter.userinfo[0]
     return(
       <View className='setting-modal'>
         <View className='close' onClick={this.handleClose}>
@@ -116,6 +116,7 @@ export default class SettingModal extends Component{
               value={userinfo && userinfo.age ? userinfo.age : '未填写'}
               onChange={this.handleChange.bind(this,'age')}
             />
+            <AtIcon value='edit' color='#ccc' size='18'/>
           </View>
           <View className='item'><Text className='label'>手机：</Text>
             <Input
@@ -125,6 +126,7 @@ export default class SettingModal extends Component{
               value={userinfo && userinfo.phone ? userinfo.phone : '未填写'}
               onChange={this.handleChange.bind(this,'phone')}
             />
+            <AtIcon value='edit' color='#ccc' size='18'/>
           </View>
           <View className='item'>
             <Text className='label'>简介：</Text>
@@ -135,6 +137,7 @@ export default class SettingModal extends Component{
               value={userinfo && userinfo.intro ? userinfo.intro : '没有简介，不想写简介。'}
               onChange={this.handleChange.bind(this,'intro')}
             />
+            <AtIcon value='edit' color='#ccc' size='18'/>
             </View>
           <View className='item'><Text className='label'>地址：</Text>
             <Text className='text'>
@@ -143,7 +146,7 @@ export default class SettingModal extends Component{
             </Text>
           </View>
           <View className='item btn' >
-            <AtButton type='primary' size='small' onClick={this.handleSettings}>save</AtButton>
+            <AtButton type='primary' size='small' onClick={this.handleSettings}>保存</AtButton>
           </View>
         </View>
       </View>

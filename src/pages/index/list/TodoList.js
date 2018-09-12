@@ -7,7 +7,7 @@ import zoomimg from '../../../assets/img/1556287878.png'
 
 import { connect } from '@tarojs/redux'
 import {getList,add} from '../../../actions/counter';
-
+import Api from '../../../ApiManager'
 @connect(({ counter }) => ({
   counter
 }), (dispatch) => ({
@@ -42,6 +42,42 @@ export default class TodoList extends Component{
   }
   handleItemDel = (id) =>{
     console.log(id)
+    let _that = this
+    Taro.showModal({
+      title:'确定删除',
+      success:((res)=>{
+        if(res.confirm){
+          Taro.request({
+            url:Api.newsDelete,
+            data:{
+              id:id
+            },
+            success:((res)=>{
+              console.log(res)
+              if(res.statusCode === 200 && res.data.code >0){
+                  let list = _that.props.counter.list.filter((data)=>data.id !== id)
+                  _that.props.getList(list,1)
+                Taro.showToast({
+                  title:res.data.msg
+                })
+              }else if(res.statusCode === 200 && res.data.code < 0){
+                Taro.showToast({
+                  title:res.data.msg
+                })
+              }
+            }),
+            fail:((res)=>{
+              Taro.showToast({
+                title:'请求失败'
+              })
+            })
+          })
+        }else if(res.cancel){
+          console.log('取消了')
+        }
+      })
+    })
+
   }
   render(){
     let list = this.props.counter.list;

@@ -1,7 +1,6 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Button } from '@tarojs/components'
 import './index.scss'
-import TabBar from '../common/TabBar';
 import List from './list/List'
 import Api from '../../ApiManager'
 import {connect} from '@tarojs/redux'

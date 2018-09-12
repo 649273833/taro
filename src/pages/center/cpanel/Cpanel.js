@@ -20,35 +20,25 @@ class Cpanel extends Component{
   state = {
   }
   componentDidMount(){
-    this.onHandleGetUserInfoToStorage()
+    // this.onHandleGetUserInfoToStorage()
   }
   onHandleGetUserInfoToStorage = () =>{
     let _that = this
     let id = this.props.counter.userinfo.id
-    Taro.getStorage({
-      key:'userinfo',
+    let data = {id:id}
+    Taro.request({
+      url:Api.userlist,
+      data:data,
       success:((res)=>{
-        let data = ''
-        if(!id){
-          data = {nickName:res.data.nickName}
+        if(res.data.code < 0){
+          console.log('获取失败')
         }else {
-          data = {id:id}
-        }
-        Taro.request({
-          url:Api.userlist,
-          data:data,
-          success:((res)=>{
-            if(res.data.code < 0){
-              console.log('获取失败')
-            }else {
-              Taro.setStorage({
-                key:'userinfo',
-                data:res.data.data[0]
-              })
-              _that.props.setuserinfo(res.data.data[0])
-            }
+          Taro.setStorage({
+            key:'userinfo',
+            data:res.data.data[0]
           })
-        })
+          _that.props.setuserinfo(res.data.data[0])
+        }
       })
     })
   }
@@ -104,9 +94,14 @@ class Cpanel extends Component{
       }
     })
   }
+  handleToBrowse = () =>{
+    Taro.navigateTo({
+      url:'/pages/center/browse/browse'
+    })
+  }
   render(){
     let isShow = this.props.counter.isShow
-    let userinfo = this.props.counter.userinfo
+    let userinfo = this.props.counter.userinfo[0]
     let scrollStyle = {
       height:'100%',
     }
@@ -139,7 +134,10 @@ class Cpanel extends Component{
               </View>
               <View className='item'>{userinfo && userinfo.intro ? userinfo.intro : '没有简介，不想写简介。'}</View>
               <View className='item'>
-                <Text onClick={this.props.setIsShow}>个人资料</Text>
+                <View>
+                  <Text onClick={this.props.setIsShow}>个人资料</Text>
+                  <AtIcon value='edit' color='#ccc' size='18'/>
+                </View>
                 <AtButton
                   icon='reload'
                   circle
@@ -149,6 +147,10 @@ class Cpanel extends Component{
                   onClick={this.handleReload }
                 >更新</AtButton>
               </View>
+              <View className='item' onClick={this.handleToBrowse}>
+                <Text>最近浏览</Text>
+                <Text>8条</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -157,4 +159,9 @@ class Cpanel extends Component{
     )
   }
 }
+Cpanel.defaultProps = {
+  userinfo:['none'],
+  isShow:false
+}
 export default Cpanel
+
