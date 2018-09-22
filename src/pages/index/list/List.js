@@ -90,7 +90,6 @@ export default class List extends Component{
     }else {
       start = start
     }
-    console.log(start)
     let data = {
       start:start,
       page:5

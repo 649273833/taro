@@ -24,7 +24,7 @@ export default class TodoList extends Component{
   }
   handleToDetail = (item) =>{
     Taro.navigateTo({
-      url:`/pages/index/detail/detail?id=${item.id}`
+      url:`/pages/index/detail/detail?id=${item.id}&from=1`
     })
   }
   handleItemMove = (id,e) =>{

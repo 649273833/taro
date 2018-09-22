@@ -1,10 +1,18 @@
 import Taro,{Component} from '@tarojs/taro';
 import {View,Image} from '@tarojs/components';
 import {connect} from '@tarojs/redux';
-import { AtList, AtListItem ,AtNavBar} from "taro-ui";
+import { AtNavBar} from "taro-ui";
 import zoomimg from '../../../assets/img/1556287878.png'
 import Api from '../../../ApiManager'
 import './browse.scss'
+import { userinfo, } from '../../../actions/counter';
+@connect(({ counter }) => ({
+  counter
+}), (dispatch) => ({
+  setuserinfo(data){
+    dispatch(userinfo(data))
+  },
+}))
 class Browse extends Component{
   state = {
     list : []
@@ -13,26 +21,34 @@ class Browse extends Component{
     this.handleGetBrowseList()
   }
   handleGetBrowseList = () =>{
+    let _that = this;
     Taro.request({
       url:Api.browseSelect,
+      data:{uid:_that.props.counter.userinfo[0].id},
       success:((res)=>{
-        console.log(res)
+        _that.setState({list:res.data.data})
       })
+    })
+  }
+  handleNavToDetail = (id) =>{
+    Taro.navigateTo({
+      url:`/pages/index/detail/detail?id=${id}&from=1`
     })
   }
   handleClickLeft = () =>{
     Taro.navigateBack({delta:1})
   }
-  handleClickRight = () =>{
-    console.log('right')
-  }
-  handleClickRightS = () =>{
-
-  }
+  // handleClickRight = () =>{
+  //   console.log('right')
+  // }
+  // handleClickRightS = () =>{
+  //
+  // }
   onPullDownRefresh(){
     console.log('下拉');
   }
   render(){
+    let {list} =this.state;
     return(
       <View>
         <AtNavBar
@@ -43,355 +59,32 @@ class Browse extends Component{
           // rightFirstIconType='reload'
           // rightSecondIconType=''
           onClickLeftIcon={this.handleClickLeft}
-          onClickRgIconSt={this.handleClickRight}
-          onClickRgIconNd={this.handleClickRightS}
+          // onClickRgIconSt={this.handleClickRight}
+          // onClickRgIconNd={this.handleClickRightS}
         />
         <View className='browse-list'>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
+          {
+            list && (list || []).map((item)=>
+              <View className='item'
+                    key={item.id}
+                    onClick={this.handleNavToDetail.bind(this,item.nid)}
+              >
+                <View className='avatar'>
+                  <Image className='avatar-url' src={item && item.zoomimg ? item.zoomimg : zoomimg}/>
+                </View>
+                <View className='content'>
+                  <View className='title text-overflow'>
+                    {item && item.title ? item.title : ''}
+                  </View>
+                  <View className='intr-box'>
+                    <Text className='intr'>{item && item.type ? item.type : ''}</Text>
+                    <Text className='intr'>阅读</Text>
+                    <Text className='intr'>{item && item.reading ? item.reading : ''}</Text>
+                  </View>
+                </View>
               </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
-          <View className='item'>
-            <View className='avatar'>
-              <Image className='avatar-url' src={zoomimg}/>
-            </View>
-            <View className='content'>
-              <View className='title text-overflow'>
-                这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题这个是标题
-              </View>
-              <View className='intr-box'>
-                <Text className='intr'>react</Text>
-                <Text className='intr'>阅读</Text>
-                <Text className='intr'>118</Text>
-              </View>
-            </View>
-          </View>
+            )
+          }
         </View>
       </View>
     )

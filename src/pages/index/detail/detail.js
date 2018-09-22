@@ -5,10 +5,13 @@ import '../list/list.scss'
 import Api from '../../../ApiManager'
 import h1 from '../../../assets/img/20180905100040.jpg'
 import h2 from '../../../assets/img/20180905100051.jpg'
-import WxParse from '../../../wxParse/wxParse'
-
+// import WxParse from '../../../wxParse/wxParse'
 import { connect } from '@tarojs/redux'
-import {getList,add,userinfo} from '../../../actions/counter';
+import {getList,add,userinfo} from '../../../actions/counter'
+let WxParse = nul;
+if(Taro.getEnv() === 'WEAPP'){
+  WxParse = require('../../../wxParse/wxParse')
+}
 @connect(({ counter }) => ({
   counter
 }), (dispatch) => ({
@@ -27,6 +30,7 @@ class Detail extends Component{
     id : this.$router.params.id,
     content:'',
     list:[],
+    browseUser:[]
   }
   onShareAppMessage(){
     return {
@@ -36,11 +40,11 @@ class Detail extends Component{
   componentDidMount(){
     this.props.add()//辅助重新渲染页面，不知道为啥更新redux里面的数据后，没有更新页面
     this.handleGetContent()
+    this.handleGetBrowseUser()
   }
   handleAddBrowse = () =>{
     let _that = this
     let {list} = _that.state;
-
     if(_that.props.counter.userinfo[0].id && list.id){
       Taro.request({
         url:Api.browseExists,
@@ -56,6 +60,8 @@ class Detail extends Component{
                 uid:_that.props.counter.userinfo[0].id,
                 nid:list.id,
                 title:list.title,
+                type:list.type,
+                avatarUrl:_that.props.counter.userinfo[0].avatarUrl,
                 reading:list.reading,
                 zoomimg:list.zoomimg,
               },
@@ -67,6 +73,17 @@ class Detail extends Component{
         })
       })
     }
+  }
+  handleGetBrowseUser = () =>{
+    let _that = this;
+    Taro.request({
+      url:Api.browseUser,
+      data:{nid:_that.$router.params.id},
+      success:((res)=>{
+        console.log(res)
+        _that.setState({browseUser:res.data.data})
+      })
+    })
   }
   handleGetContent = (type) =>{
     Taro.showLoading({
@@ -111,16 +128,31 @@ class Detail extends Component{
   }
 
   handleClickLeft = () =>{
-    Taro.switchTab({
-      url:'/pages/index/index',
-    })
+    let from = this.$router.params.from
+    if(from){
+      Taro.navigateBack({delta:1})
+    }else {
+      Taro.switchTab({
+        url:'/pages/index/index',
+      })
+    }
   }
   handleClickRight = () =>{
     this.handleGetContent('reload')
   }
 
   render(){
-    let {content,list } = this.state;
+    let {content,list ,browseUser} = this.state;
+    let Content = null;
+    if (Taro.getEnv() === 'WEAPP') {
+      Content =
+        <View className='content'>
+         <import src='../../../wxParse/wxParse.wxml' />
+         <template is='wxParse' data='{{wxParseData:article.nodes}}'/>
+       </View>
+    } else if(Taro.getEnv() === 'H5'){
+      Content = <View className='content' dangerouslySetInnerHTML = {{ __html:content}}/>
+    }
     return(
       <View className='detail'>
         <AtNavBar
@@ -141,21 +173,16 @@ class Detail extends Component{
             <Text>{list ? list.type : ''}</Text>
             <Text>{list ? list.writetime : ''}</Text>
           </View>
-          {/*<View className='content' dangerouslySetInnerHTML = {{ __html:content}}/>*/}
-          <View className='content'>
-            <import src='../../../wxParse/wxParse.wxml' />
-            <template is='wxParse' data='{{wxParseData:article.nodes}}'/>
-          </View>
-
+          {Content}
         </View>
         <View className='bottom-info'>
           <Text className='readings'>最近阅读：</Text>
           <View className='avatars'>
-            <Image className='items' src={h1}/>
-            <Image className='items' src={h2}/>
-            <Image className='items' src={h1}/>
-            <Image className='items' src={h2}/>
-            <Image className='items' src={h1}/>
+            {
+              browseUser && (browseUser || []).map((item)=>
+                <Image key={item.id} className='items' src={browseUser && browseUser.avatarUrl ? browseUser.avatarUrl : h2}/>
+              )
+            }
           </View>
         </View>
       </View>

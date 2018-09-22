@@ -18,13 +18,14 @@ import { userinfo, isShow} from '../../../actions/counter';
 }))
 class Cpanel extends Component{
   state = {
+    count:0
   }
   componentDidMount(){
-    // this.onHandleGetUserInfoToStorage()
+    this.handleGetBrowseCount()
   }
   onHandleGetUserInfoToStorage = () =>{
     let _that = this
-    let id = this.props.counter.userinfo.id
+    let id = this.props.counter.userinfo[0].id
     let data = {id:id}
     Taro.request({
       url:Api.userlist,
@@ -42,9 +43,9 @@ class Cpanel extends Component{
       })
     })
   }
-
   handleReload = () =>{
     let _that = this
+    _that.handleGetBrowseCount()
     Taro.getSetting({
       success:function(data) {
         if (data && data.errMsg === "getSetting:ok") {
@@ -70,7 +71,7 @@ class Cpanel extends Component{
         Taro.request({
           url:Api.userReload,
           data:{
-            id:_that.props.counter.userinfo.id,
+            id:_that.props.counter.userinfo[0].id,
             nickName:userinfo.nickName,
             gender:userinfo.gender,
             language:userinfo.language,
@@ -99,9 +100,20 @@ class Cpanel extends Component{
       url:'/pages/center/browse/browse'
     })
   }
+  handleGetBrowseCount = () =>{
+    let _that = this;
+    Taro.request({
+      url:Api.browseCountSelect,
+      data:{uid:_that.props.counter.userinfo[0].id},
+      success:((res)=>{
+        _that.setState({count:res.data.data[0].c})
+      })
+    })
+  }
   render(){
     let isShow = this.props.counter.isShow
     let userinfo = this.props.counter.userinfo[0]
+    let {count} = this.state;
     let scrollStyle = {
       height:'100%',
     }
@@ -149,7 +161,7 @@ class Cpanel extends Component{
               </View>
               <View className='item' onClick={this.handleToBrowse}>
                 <Text>最近浏览</Text>
-                <Text>8条</Text>
+                <Text>{count}条</Text>
               </View>
             </View>
           </View>
