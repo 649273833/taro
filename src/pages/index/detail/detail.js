@@ -5,10 +5,9 @@ import '../list/list.scss'
 import Api from '../../../ApiManager'
 import h1 from '../../../assets/img/20180905100040.jpg'
 import h2 from '../../../assets/img/20180905100051.jpg'
-// import WxParse from '../../../wxParse/wxParse'
 import { connect } from '@tarojs/redux'
 import {getList,add,userinfo} from '../../../actions/counter'
-let WxParse = nul;
+let WxParse = null;
 if(Taro.getEnv() === 'WEAPP'){
   WxParse = require('../../../wxParse/wxParse')
 }
@@ -30,17 +29,28 @@ class Detail extends Component{
     id : this.$router.params.id,
     content:'',
     list:[],
-    browseUser:[]
+    browseUser:[],
+    next:[],
+    prev:[]
   }
   onShareAppMessage(){
     return {
       title: this.state.list.title,
+      success:()=>{
+        Taro.showToast({
+          title:'转发成功！',
+          icon:'success'
+        })
+        Taro.hideToast()
+      }
     }
   }
   componentDidMount(){
     this.props.add()//辅助重新渲染页面，不知道为啥更新redux里面的数据后，没有更新页面
+
     this.handleGetContent()
     this.handleGetBrowseUser()
+    this.handleNewsNP()
   }
   handleAddBrowse = () =>{
     let _that = this
@@ -80,7 +90,6 @@ class Detail extends Component{
       url:Api.browseUser,
       data:{nid:_that.$router.params.id},
       success:((res)=>{
-        console.log(res)
         _that.setState({browseUser:res.data.data})
       })
     })
@@ -98,7 +107,8 @@ class Detail extends Component{
     })
       .then((res)=>{
         _that.setState({list:res.data.data[0]}, ()=>{
-          if(type !== 'reload'){
+          let from = this.$router.params.from
+          if(type !== 'reload' && !from){
             _that.handleAddBrowse()
           }
         })
@@ -129,7 +139,7 @@ class Detail extends Component{
 
   handleClickLeft = () =>{
     let from = this.$router.params.from
-    if(from){
+    if(from == '1'){
       Taro.navigateBack({delta:1})
     }else {
       Taro.switchTab({
@@ -140,9 +150,40 @@ class Detail extends Component{
   handleClickRight = () =>{
     this.handleGetContent('reload')
   }
-
+  handleNewsNP = () =>{
+    let _that = this;
+    Taro.request({
+      url:Api.newsN,
+      data:{
+        id:_that.$router.params.id
+      },
+      success:res=>{
+        _that.setState({next:res.data.data})
+      },
+      fail:err=>{
+        console.log(err)
+      }
+    })
+    Taro.request({
+      url:Api.newsP,
+      data:{
+        id:_that.$router.params.id
+      },
+      success:res=>{
+        _that.setState({prev:res.data.data})
+      },
+      fail:err=>{
+        console.log(err)
+      }
+    })
+  }
+  handleGoNewsNP = (item) =>{
+    Taro.navigateTo({
+      url:`/pages/index/detail/detail?id=${item[0].id}&from=2`
+    })
+  }
   render(){
-    let {content,list ,browseUser} = this.state;
+    let {content,list ,browseUser,prev,next} = this.state;
     let Content = null;
     if (Taro.getEnv() === 'WEAPP') {
       Content =
@@ -174,6 +215,20 @@ class Detail extends Component{
             <Text>{list ? list.writetime : ''}</Text>
           </View>
           {Content}
+          <View className='next-prev'>
+            {
+              prev && prev.length > 0 ?
+                <View className='prev text-overflow' onClick={this.handleGoNewsNP.bind(this,prev)}>{prev[0].title}</View>
+                :
+                <View className='prev text-overflow'>没有更多了</View>
+            }
+            {
+              next && next.length > 0  ?
+                <View className='next text-overflow' onClick={this.handleGoNewsNP.bind(this,next)}>{next[0].title}</View>
+                :
+                <View className='next text-overflow'>没有更多了</View>
+            }
+          </View>
         </View>
         <View className='bottom-info'>
           <Text className='readings'>最近阅读：</Text>

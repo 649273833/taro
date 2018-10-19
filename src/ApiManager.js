@@ -28,4 +28,6 @@ export default {
   'browseSelect':postApi('https://wx.zzwio.com/api/browse_select.php',0),
   'browseCountSelect':postApi('https://wx.zzwio.com/api/browse_count_select.php',0),
   'browseUser':postApi('https://wx.zzwio.com/api/browse_user.php',0),
+  'newsN':postApi('https://wx.zzwio.com/api/news_select_n.php',0),
+  'newsP':postApi('https://wx.zzwio.com/api/news_select_p.php',0),
 }

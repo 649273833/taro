@@ -1,5 +1,7 @@
 @import "../../../app.scss";
 @import "../../../wxParse/wxParse.wxss";
+
+
 .list{
   border-radius: 8px;
   overflow: hidden;
@@ -135,6 +137,21 @@
       border-bottom:2px solid #666;
       padding-bottom:40px;
 
+    }
+    .next-prev{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 10px;
+      font-size: 32px;
+      color: #0aa699;
+      .next,.prev{
+        flex: 50%;
+        padding-right: 6px;
+      }
+      .next{
+        text-align: right;
+      }
     }
     .content{
       pre,.wxParse-pre{

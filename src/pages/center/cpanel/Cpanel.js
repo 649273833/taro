@@ -1,5 +1,5 @@
 import Taro,{Component} from '@tarojs/taro';
-import {View,Image,Text,Button} from '@tarojs/components'
+import {View,Image,Text,ScrollView} from '@tarojs/components'
 import {AtIcon,AtButton} from 'taro-ui'
 import {connect} from '@tarojs/redux'
 import '../index.scss'
@@ -153,6 +153,7 @@ class Cpanel extends Component{
                 <AtButton
                   icon='reload'
                   circle
+                  type='primary'
                   size='small'
                   open-type="getUserInfo"
                   className='icon-reload'
